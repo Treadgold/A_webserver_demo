@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Complex Demo Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles2.css" />
+</head>
+<body>
+<nav class="navbar">
+    <div class="navbar-container">
+        <span class="logo">Minimal Server</span>
+        <ul class="nav-links">
+            <li><a href="/index.html/#hero">Home</a></li>
+            <li><a href="/complex.html">Complex</a></li>
+            <li><a href="/index.html/#features">Features</a></li>
+            <li><a href="/index.html/#cta">Get Started</a></li>
+            <li><a href="/about.html">About</a></li>
+        </ul>
+    </div>
+</nav>
+<header class="hero">
+    <h1>Minimal Server, Beautiful Page</h1>
+    <p>
+        This page is served by a tiny Python asyncio server with no framework.
+    </p>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>Why This Matters</h2>
+        <p>
+            This page demonstrates that even a very small amount of Python code
+            is capable of serving rich, modern web content.
+        </p>
+    </section>
+
+    <section class="card image-grid">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800" alt="Circuit board">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800" alt="Code on screen">
+        <img src="https://images.unsplash.com/photo-1527430253228-e93688616381?w=800" alt="Laptop workspace">
+    </section>
+
+    <section class="card">
+        <h2>Embedded Video</h2>
+        <div class="video-wrapper">
+            <iframe
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="YouTube video"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Contact Form</h2>
+        <form>
+            <label>
+                Your name
+                <input type="text" placeholder="Jane Doe" />
+            </label>
+
+            <label>
+                Message
+                <textarea placeholder="Say hello..."></textarea>
+            </label>
+
+            <button type="submit">Send message</button>
+        </form>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>Served by ~100 lines of Python 🐍</p>
+</footer>
+
+</body>
+</html>

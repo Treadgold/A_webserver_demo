@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>About This Server</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <span class="logo">Minimal Server</span>
+        <ul class="nav-links">
+            <li><a href="/index.html/#hero">Home</a></li>
+            <li><a href="/complex.html">Complex</a></li>
+            <li><a href="/index.html/#features">Features</a></li>
+            <li><a href="/index.html/#cta">Get Started</a></li>
+            <li><a href="/about.html">About</a></li>
+        </ul>
+    </div>
+</nav>
+    <div class="container">
+        <h1>About This Tiny Python Server</h1>
+
+        <p>This page is being served by a very small, intentionally minimal web server written in pure Python.</p>
+        <p>There are no frameworks involved. No Flask. No FastAPI. Just the Python standard library and a browser making an HTTP request.</p>
+
+        <h2>Why does this exist?</h2>
+        <p>Modern web frameworks are excellent, but they hide a lot of important concepts behind convenience layers.</p>
+        <p>This project exists to show what is really happening underneath:</p>
+
+        <ul>
+            <li>A browser connects to a server</li>
+            <li>The browser sends a text-based HTTP request</li>
+            <li>The server reads that request</li>
+            <li>A Python function decides what to return</li>
+            <li>The server sends an HTTP response</li>
+            <li>The browser renders the HTML</li>
+        </ul>
+
+        <h2>Why is it so simple?</h2>
+        <p>Because every extra feature adds mental overhead.</p>
+        <p>By keeping this server small, you can read the entire implementation and understand how web applications actually work before introducing frameworks and abstractions.</p>
+        <p>Once this makes sense, Flask and FastAPI stop feeling magical and start feeling helpful.</p>
+        <p>View the source code, change this file, refresh your browser, and see the result immediately.</p>
+        <p>That feedback loop is the foundation of web development.</p>
+    </div>
+</body>
+
+</html>

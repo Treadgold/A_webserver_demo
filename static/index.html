@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal HTML Server</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <span class="logo">Minimal Server</span>
+        <ul class="nav-links">
+            <li><a href="/index.html/#hero">Home</a></li>
+            <li><a href="/complex.html">Complex</a></li>
+            <li><a href="/index.html/#features">Features</a></li>
+            <li><a href="/index.html/#cta">Get Started</a></li>
+            <li><a href="/about.html">About</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <h1>Minimal HTML Server</h1>
+            <p>Experience how a tiny Python server delivers fully-functional HTML pages without frameworks.</p>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <h2>Why Choose Minimal?</h2>
+            <p>Minimal servers strip away the complexity and let you understand what’s really happening under the hood.</p>
+            <div class="feature-cards">
+                <div class="card">
+                    <h3>Fast & Lightweight</h3>
+                    <p>Everything runs smoothly with zero dependencies. No heavy frameworks, just Python and HTML.</p>
+                </div>
+                <div class="card">
+                    <h3>Educational</h3>
+                    <p>Learn the core concepts of HTTP requests and responses, and see your changes instantly.</p>
+                </div>
+                <div class="card">
+                    <h3>Fully Customizable</h3>
+                    <p>You control every aspect of your HTML, CSS, and server behavior.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section id="cta" class="cta">
+            <h2>Start Experimenting</h2>
+            <p>Modify the HTML, refresh your browser, and immediately see the results. The feedback loop is the foundation of web development.</p>
+            <a href="#hero" class="button">Back to Top</a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Minimal HTML Server. Made with Python ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
