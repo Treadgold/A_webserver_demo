@@ -298,7 +298,7 @@ button:disabled {
             <div class="column">
                 <ul>
                     <li>Here's the opposite extreme – the world's simplest web server</li>
-                    <li>Just 4 lines of Bash using netcat to listen on a port</li>
+                    <li>Just 10 lines of Bash using netcat to listen on a port</li>
                     <li>No matter what you request – /, /about, /api/users – you get the same response</li>
                     <li>No file serving, no routing, no frameworks, no magic</li>
                     <li>But it WORKS! You could even point a domain at it and serve a page</li>
@@ -309,10 +309,16 @@ button:disabled {
             <div class="column">
                 <pre><code class="language-bash">
 #!/bin/bash
-while true; do
-  echo "HTTP/1.1 200 OK
 
-<h1>Hello World</h1>" | nc -l 8080
+while true; do
+  nc -l -p 8018 <<'EOF'
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 20
+Connection: close
+
+<h1>Hello World</h1>
+EOF
 done
 </code></pre>
             </div>
@@ -374,118 +380,600 @@ if __name__ == "__main__":
 </div>
 
 
-
-    <!-- Slide 6 -->
-    <div class="slide">
-        <h2>What this talk is</h2>
-        <p>This is not a complete Google Earth view of web servers.</p>
-        <p>But it is an attempt to give you a better map.</p>
+<!-- SLIDE 7: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>The Core Server Loop</h2>
     </div>
 
-    <!-- Slide 7 -->
-    <div class="slide">
-        <p>A map where you can see:</p>
-        <ul>
-            <li>Where you are</li>
-            <li>What’s doing the hard work for you</li>
-            <li>What roads exist that you might explore later</li>
-        </ul>
-    </div>
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: explanation -->
+            <div class="column">
+                <p>At its core, a web server is just a loop.</p>
 
-    <!-- Slide 8 -->
-    <div class="slide">
-        <h2>So let’s start very small</h2>
-        <p>Before HTTP. Before frameworks.</p>
-        <p>Just a server, a socket, and a browser.</p>
-    </div>
+                <ul>
+                    <li>Wait for a client to connect</li>
+                    <li>Accept the connection</li>
+                    <li>Handle the request</li>
+                    <li>Close the connection</li>
+                    <li>Repeat forever</li>
+                </ul>
 
-    <!-- Slide 9 -->
-    <div class="slide">
-        <h2>TCP is doing a lot for us</h2>
-        <p>When we open a socket, we’re not starting from nothing.</p>
-        <p>TCP already guarantees ordering, delivery, retries, and flow control.</p>
-    </div>
+                <p>
+                    This pattern exists in <strong>every web server</strong>,  
+                    no matter how advanced the framework.
+                </p>
 
-    <!-- Slide 10 -->
-    <div class="slide">
-        <p>TCP makes sure:</p>
-        <ul>
-            <li>Packets arrive in order</li>
-            <li>Lost packets are resent</li>
-            <li>Both sides agree the connection exists</li>
-        </ul>
-    </div>
+                <p>
+                    Right now, we’ll focus on <em>what happens during one request</em>.
+                </p>
+            </div>
 
-    <!-- Slide 11 -->
-    <div class="slide">
-        <p>This means our “simple” server is standing on a huge amount of machinery.</p>
-        <p>That’s not cheating. That’s the map.</p>
-    </div>
+            <!-- Right column: code -->
+            <div class="column">
+                <pre><code class="language-python">import socket
 
-    <!-- Slide 12 -->
-    <div class="slide">
-        <h2>Our first server</h2>
-        <p>At the start, our server barely speaks HTTP.</p>
-        <p>It mostly just accepts a connection and doesn’t crash.</p>
-    </div>
+server_socket = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM,
+)
+server_socket.bind(("127.0.0.1", 8002))
+server_socket.listen(5)
 
-    <!-- Slide 13 -->
-    <div class="slide">
-        <p>And that’s okay.</p>
-        <p>Because we know where we are on the map. We’re standing right on top of TCP.</p>
-    </div>
-
-    <!-- Slide 14 -->
-    <div class="slide">
-        <h2>Adding structure</h2>
-        <p>Then we start recognizing patterns.</p>
-        <p>Requests. Headers. Status lines.</p>
-    </div>
-
-    <!-- Slide 15 -->
-    <div class="slide">
-        <p>Nothing about the <em>content</em> changes.</p>
-        <p>The same HTML file. The same JavaScript. The same video.</p>
-    </div>
-
-    <!-- Slide 16 -->
-    <div class="slide">
-        <h2>Only the roads change</h2>
-        <p>What changes is how we serve it.</p>
-        <p>Blocking vs non-blocking. One client vs many.</p>
-    </div>
-
-    <!-- Slide 17 -->
-    <div class="slide">
-        <p>This is like upgrading from dirt roads to highways.</p>
-        <p>The destination stays the same.</p>
-    </div>
-
-    <!-- Slide 18 -->
-    <div class="slide">
-        <h2>Frameworks revisited</h2>
-        <p>When we return to something like FastAPI, it’s no longer magic.</p>
-    </div>
-
-    <!-- Slide 19 -->
-    <div class="slide">
-        <p>We can point to the map and say:</p>
-        <ul>
-            <li>This part replaces our socket loop</li>
-            <li>This part handles concurrency</li>
-            <li>This part speaks HTTP for us</li>
-        </ul>
-    </div>
-
-    <!-- Slide 20 -->
-    <div class="slide">
-        <h2>Ending where we started</h2>
-        <p>The goal was never to memorize directions.</p>
-        <p>The goal was to know where you are.</p>
-        <p>If you leave with anything today, I hope it’s a better internal map.</p>
-        <p>One that lets you explore without fear of getting lost.</p>
+while True:
+    client_socket, addr = server_socket.accept()
+    handle_client(client_socket)</code></pre>
+            </div>
+        </div>
     </div>
 </div>
+
+
+<!-- SLIDE 8: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>What a Browser Actually Sends</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: explanation -->
+            <div class="column">
+                <p>When a browser connects, it sends plain text.</p>
+
+                <ul>
+                    <li>An HTTP request is just lines of text</li>
+                    <li>The first line tells us what the client wants</li>
+                    <li>Everything else is metadata (headers)</li>
+                </ul>
+
+                <p>
+                    If we can:
+                </p>
+
+                <ul>
+                    <li>Read bytes from the socket</li>
+                    <li>Decode them into text</li>
+                    <li>Understand the first line</li>
+                </ul>
+
+                <p>
+                    Then we can build a real web server.
+                </p>
+            </div>
+
+            <!-- Right column: raw HTTP -->
+            <div class="column">
+                <pre><code class="language-text">GET /index.html HTTP/1.1
+Host: 127.0.0.1:8002
+User-Agent: Firefox
+Accept: text/html
+Connection: keep-alive</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- SLIDE 9: WHAT HANDLE_CLIENT REALLY DOES -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>What Happens Inside <code>handle_client()</code></h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: conceptual steps -->
+            <div class="column">
+                <p>This function is where HTTP actually happens.</p>
+
+                <p>Every request follows the same basic sequence:</p>
+
+                <ol>
+                    <li><strong>Read bytes</strong> from the socket</li>
+                    <li><strong>Decode</strong> bytes into text</li>
+                    <li><strong>Parse</strong> the requested path</li>
+                    <li><strong>Load</strong> a file from disk</li>
+                    <li><strong>Wrap</strong> it in HTTP headers</li>
+                    <li><strong>Send</strong> it back to the client</li>
+                </ol>
+
+                <p>
+                    Each step is simple.  
+                    Together, they <strong>are a web server</strong>.
+                </p>
+
+                <p>
+                    Frameworks like Flask hide this, but they do
+                    <em>exactly the same work</em>.
+                </p>
+            </div>
+
+            <!-- Right column: annotated code -->
+            <div class="column">
+                <pre><code class="language-python">def handle_client(client_socket):
+    # 1. Read the request
+    request_bytes = client_socket.recv(1024)
+    request = request_bytes.decode("utf-8")
+
+    # 2. Parse what they want
+    path = parse_http_path(request)
+
+    # 3. Find the file
+    file_path = STATIC_DIR / path.lstrip("/")
+
+    # 4. Read it from disk
+    body = file_path.read_bytes()
+
+    # 5. Build HTTP response
+    response = http_response(
+        body,
+        content_type="text/html"
+    )
+
+    # 6. Send it back
+    client_socket.sendall(response)
+    client_socket.close()</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 10: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>A Real (Blocking) Web Server</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: summary -->
+            <div class="column">
+                <p>We now have a real, working HTTP server.</p>
+
+                <ul>
+                    <li>Serves files from a <strong>static directory</strong></li>
+                    <li>Uses <code>pathlib</code> for safe path handling</li>
+                    <li>Correct <strong>Content-Type</strong> headers via MIME mapping</li>
+                    <li>Supports HTML, CSS, JS, images, SVGs</li>
+                    <li>Clean shutdown with <code>Ctrl+C</code></li>
+                </ul>
+
+                <p>
+                    You can open a browser, load pages, navigate links,
+                    and everything works.
+                </p>
+
+                <p>
+                    This is a <strong>proper HTTP server</strong> —
+                    just without frameworks.
+                </p>
+
+                <p><strong>But:</strong> it still handles one request at a time.</p>
+            </div>
+
+            <!-- Right column: code snapshot -->
+            <div class="column">
+                <pre><code class="language-python">def handle_client(client_socket):
+    request = client_socket.recv(1024)
+    path = parse_http_path(request.decode())
+
+    file_path = resolve_request_path(path)
+
+    if file_path.exists():
+        body = file_path.read_bytes()
+        content_type = get_content_type(file_path)
+        response = http_response(body, content_type)
+    else:
+        response = http_response(
+            b"&lt;h1&gt;404 Not Found&lt;/h1&gt;",
+            status="404 Not Found",
+        )
+
+    client_socket.sendall(response)
+    client_socket.close()</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 11: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>Where the Server Blocks</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: problem framing -->
+            <div class="column">
+                <p>When many clients connect at once, this server slows to a crawl.</p>
+
+                <p>The reason is not HTTP, files, or Python.</p>
+
+                <p><strong>The problem is waiting.</strong></p>
+
+                <ul>
+                    <li>Each client is handled fully before the next begins</li>
+                    <li>While one request is being processed, others wait</li>
+                    <li>Under load, connections queue up and time out</li>
+                </ul>
+
+                <p>
+                    This is what “blocking” really means.
+                </p>
+            </div>
+
+            <!-- Right column: highlighted blocking loop -->
+            <div class="column">
+                <pre><code class="language-python">while True:
+    client_socket, addr = server_socket.accept()
+
+    # ⛔ Server is now busy
+    handle_client(client_socket)
+    # ⛔ Everyone else waits here</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 12: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 1: Async Streams</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: explanation -->
+            <div class="column">
+                <p>We replaced blocking sockets with <strong>asyncio streams</strong>:</p>
+
+                <ul>
+                    <li><code>asyncio.start_server()</code> gives us <code>reader</code> & <code>writer</code></li>
+                    <li><code>await reader.read(1024)</code> pauses only this task while waiting for I/O</li>
+                    <li>Other requests can be handled immediately</li>
+                    <li>We no longer block the entire server on a single request</li>
+                </ul>
+
+                <p>
+                    The goal: keep the server responsive under load.
+                </p>
+            </div>
+
+            <!-- Right column: code highlight -->
+            <div class="column">
+                <pre><code class="language-python">async def handle_client(reader, writer):
+    # Async read — only this client waits
+    request_bytes = await reader.read(1024)
+
+    if not request_bytes:
+        writer.close()
+        return
+
+    # Decode and parse path as before
+    request = request_bytes.decode("utf-8", errors="ignore")
+    path = parse_http_path(request)</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 13: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 2: Writing Responses Asynchronously</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: explanation -->
+            <div class="column">
+                <p>Sending data is now also non-blocking:</p>
+
+                <ul>
+                    <li><code>writer.write()</code> queues bytes to be sent</li>
+                    <li><code>await writer.drain()</code> pauses only this task until the buffer clears</li>
+                    <li>Other tasks can run immediately — no waiting for slow clients</li>
+                    <li>We still reuse the same HTTP response logic as before</li>
+                </ul>
+
+                <p>This lets multiple clients get responses concurrently.</p>
+            </div>
+
+            <!-- Right column: code highlight -->
+            <div class="column">
+                <pre><code class="language-python"># Build the response as before
+response = http_response(body, content_type=content_type)
+
+# Async write — only this client is paused
+writer.write(response)
+await writer.drain()
+
+# Close the connection
+writer.close()</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 14: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 3: Event Loop</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: explanation -->
+            <div class="column">
+                <p>The infinite blocking loop is replaced with <strong>asyncio's event loop</strong>:</p>
+
+                <ul>
+                    <li><code>asyncio.start_server(handle_client, ...)</code> schedules each connection as a task</li>
+                    <li><code>async with server:</code> manages the server lifecycle cleanly</li>
+                    <li><code>await server.serve_forever()</code> runs the loop until cancelled</li>
+                    <li>Clean shutdown with <code>Ctrl+C</code> is now supported</li>
+                </ul>
+
+                <p>
+                    The magic: multiple clients handled concurrently with the same Python process.
+                </p>
+            </div>
+
+            <!-- Right column: code highlight -->
+            <div class="column">
+                <pre><code class="language-python">async def main():
+    server = await asyncio.start_server(
+        handle_client,
+        host="127.0.0.1",
+        port=8002,
+    )
+
+    async with server:
+        try:
+            await server.serve_forever()
+        except asyncio.CancelledError:
+            print("Shutting down gracefully...")
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 1: Form Submission Fails</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left: explanation -->
+            <div class="column">
+                <p>Our first form on <code>complex.html</code> gave a 404:</p>
+                <ul>
+                    <li>We only had GET routes for "/" and "/about"</li>
+                    <li>POST requests to "/submit" were unknown</li>
+                    <li>Static fallback was not fully integrated yet</li>
+                </ul>
+                <p>Result: form submission “broke” the server.</p>
+            </div>
+
+            <!-- Right: simple visual -->
+            <div class="column">
+                <pre><code class="language-text">POST /submit HTTP/1.1
+Host: localhost
+
+name=Alice&message=Hello
+-->
+404 Not Found!</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 2: Initial Fix Attempts</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <p>We tried adding a route handler for <code>/submit</code>:</p>
+                <ul>
+                    <li>Now POST /submit works</li>
+                    <li>But static files under <code>/static</code> start failing</li>
+                    <li>Reason: route matching now overrides static fallback</li>
+                </ul>
+                <p>Lesson: routing and static files need to coexist.</p>
+            </div>
+
+            <div class="column">
+                <pre><code class="language-python">@route("POST", "/submit")
+def handle_form_submission(request):
+    # process request
+    return b"&lt;h1&gt;Form submitted!&lt;/h1&gt;"</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 3: Static Fallback Recovery</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <p>Solution: if no route matches, try serving a static file:</p>
+                <ul>
+                    <li>Routes now take precedence</li>
+                    <li>Static files remain accessible</li>
+                    <li>404 only happens if neither matches</li>
+                </ul>
+            </div>
+
+            <div class="column">
+                <pre><code class="language-python">handler = routes.get((method, path))
+if handler:
+    response = handler(request)
+else:
+    # fallback to static
+    response = load_static_file(path) or 404_page()</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 4: Accepting Request Data</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <p>Now handlers receive the <code>Request</code> object:</p>
+                <ul>
+                    <li>GET or POST method</li>
+                    <li>Path, headers, and body</li>
+                    <li>Form data can be parsed inside the handler</li>
+                </ul>
+                <p>This allows dynamic responses based on input.</p>
+            </div>
+
+            <div class="column">
+                <pre><code class="language-python">@route("POST", "/submit")
+def handle_form_submission(request):
+    data = parse_qs(request.body.decode("utf-8"))
+    name = data.get("name", ["Anonymous"])[0]
+    return f"&lt;h1&gt;Hello, {name}&lt;/h1&gt;".encode("utf-8")</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 5: Full Functional Flow</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <ul>
+                    <li>Route matches → call handler</li>
+                    <li>No route → static file fallback</li>
+                    <li>Neither → 404</li>
+                    <li>POST data handled properly → can display user input</li>
+                    <li>GET requests for static files still work</li>
+                </ul>
+                <p>Result: everything works as expected.</p>
+            </div>
+
+            <div class="column">
+                <pre><code class="language-python"># Inside handle_client
+handler = routes.get((request.method, request.path))
+if handler:
+    response = handler(request)
+else:
+    body = load_static_file(request.path)
+    response = http_response(body) if body else http_response(404_page())</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Step 6: Server Complete</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <ul>
+                    <li>GET / → index.html</li>
+                    <li>GET /about → about.html</li>
+                    <li>GET /static/... → static files served</li>
+                    <li>POST /submit → form submission handled dynamically</li>
+                    <li>404 for everything else</li>
+                </ul>
+                <p>All routes, static files, and POST forms now coexist seamlessly.</p>
+            </div>
+
+            <div class="column">
+                <pre><code class="language-text">POST /submit
+name=Alice&message=Hello
+
+→ Server responds with:
+&lt;h2&gt;Thank you, Alice!&lt;/h2&gt;
+&lt;p&gt;Your message: Hello&lt;/p&gt;</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slide">
+    <div class="slide-header">
+        <h2>Wrapping Up</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-1" style="text-align: left;">
+            <p>• Explored building a minimal <strong>async Python HTTP server</strong> from scratch</p>
+            <p>• Handled <strong>static files</strong> and proper <strong>HTTP responses</strong></p>
+            <p>• Added <strong>routing</strong> and <strong>decorators</strong> for clean endpoints</p>
+            <p>• Implemented <strong>dynamic POST handling</strong> for forms</p>
+            <p>• Ensured <strong>static fallback</strong> works alongside dynamic routes</p>
+            <p>• Maintained a clean, modular structure for future expansion</p>
+
+            <p style="margin-top: 2rem;">✅ Everything works together: GET, POST, static files, routes, and 404s.</p>
+
+            <p style="margin-top: 2rem; font-style: italic;">Thank you for your attention!</p>
+            <p>Any questions?</p>
+        </div>
+    </div>
+</div>
+
 
 <div class="slide-number">
     <span id="current-slide">1</span> / <span id="total-slides">3</span>

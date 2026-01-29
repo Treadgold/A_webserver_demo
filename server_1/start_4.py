@@ -1,6 +1,10 @@
 import socket
 from pathlib import Path
 
+# Introduce static file serving
+# Explain headers contain mime type
+# fails to close on ctrl+c
+
 #STATIC_DIR: Path = Path(__file__).parent / "static"
 
 # Path to the project root (one level above this file)

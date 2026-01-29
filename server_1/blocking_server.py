@@ -1,6 +1,11 @@
 import socket
 from pathlib import Path
 
+# We fix our ctrl+c exit and make it clean!
+
+# Main problem, can't handle async
+# demo with load simulation
+
 #STATIC_DIR: Path = Path(__file__).parent / "static"
 
 # Path to the project root (one level above this file)

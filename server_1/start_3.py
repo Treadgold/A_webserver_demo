@@ -1,5 +1,8 @@
 import socket
 
+# Let's look at an actual request
+# We will need our web server to understand
+# all the different requests it might receive
 
 def main() -> None:
     server_socket: socket.socket = socket.socket(

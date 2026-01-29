@@ -84,16 +84,22 @@
 **Visual: Bash script**
 ```bash
 #!/bin/bash
-while true; do
-  echo "HTTP/1.1 200 OK
 
-<h1>Hello World</h1>" | nc -l 8080
+while true; do
+  nc -l -p 8018 <<'EOF'
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Length: 20
+Connection: close
+
+<h1>Hello World</h1>
+EOF
 done
 ```
 
 **TALKING POINTS:**
 - "Here's the opposite extreme - the world's dumbest web server"
-- "15 lines of bash, using netcat to listen on a port"
+- "10 lines of bash, using netcat to listen on a port"
 - "No matter what you request - the homepage, /about, /api/users - you get the same response"
 - "No file serving, no routing, no nothing"
 - "But it WORKS! You can point a domain at this and serve a website"

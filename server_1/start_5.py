@@ -1,6 +1,10 @@
 import socket
 from pathlib import Path
 
+# Our first "real" server
+# We can serve files, even styles work
+# embed links, navbar works...all that stuff
+
 #STATIC_DIR: Path = Path(__file__).parent / "static"
 
 # Path to the project root (one level above this file)

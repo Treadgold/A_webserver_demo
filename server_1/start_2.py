@@ -1,5 +1,7 @@
 import socket
 
+# Here we send some HTML content for the first time
+# We should now see something in the browser!
 
 def main() -> None:
     server_socket: socket.socket = socket.socket(
