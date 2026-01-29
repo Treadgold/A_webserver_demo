@@ -70,6 +70,8 @@
 
 **PRESENTER NOTES:**
 - Don't dwell here too long (2 min max)
+
+
 - Goal: establish that production is complex, but we're going simple
 - Use humor - "This is the boring but necessary slide"
 

@@ -2,7 +2,7 @@ import socket
 
 
 def main() -> None:
-    server_socket: socket.socket = socket.socket(
+    server_socket = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM,
     )
@@ -15,7 +15,13 @@ def main() -> None:
     print(f"Connection from {addr}")
 
     # Send raw bytes — not valid HTTP
-    client_socket.sendall(b"Hello from a socket!")
+    try:
+        client_socket.sendall(b"Hello from a socket!")
+        print("Success!")
+    except Exception as e:
+        print("Failed to send to client")
+        print(f"Exception {e}")
+    
     client_socket.close()
     server_socket.close()
 

@@ -56,15 +56,15 @@
 
     <section class="card">
         <h2>Contact Form</h2>
-        <form>
+        <form action="/submit" method="post">
             <label>
                 Your name
-                <input type="text" placeholder="Jane Doe" />
+                <input type="text" name="name" placeholder="Jane Doe" required />
             </label>
 
             <label>
                 Message
-                <textarea placeholder="Say hello..."></textarea>
+                <textarea name="message" placeholder="Say hello..." required></textarea>
             </label>
 
             <button type="submit">Send message</button>

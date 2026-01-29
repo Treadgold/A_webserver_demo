@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+<!-- Prism Bash/Shell component -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+
+<meta charset="UTF-8">
+<title>From Maps to Servers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ---------------- RESET ---------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #1a202c;
+    overflow: hidden;
+}
+
+/* ---------------- SLIDE CONTAINER ---------------- */
+.slide-container {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ---------------- BASE SLIDE ---------------- */
+.slide {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    padding: 40px 80px;
+    flex-direction: column;
+}
+
+.slide.active {
+    display: flex;
+}
+
+/* ---------------- HEADER ---------------- */
+.slide-header {
+    flex: 0 0 auto;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.slide-header h1 {
+    font-size: 3.2em;
+    color: #1a202c;
+}
+
+.slide-header h2 {
+    font-size: 2.0em;
+    color: #2d3748;
+    padding-top: 15px;
+    border-bottom: 4px solid #4c51bf;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+/* ---------------- BODY (VERTICAL CENTER) ---------------- */
+.slide-body {
+    flex: 1;
+    display: flex;
+    align-items: center;   /* vertical centering */
+    justify-content: center;
+}
+
+/* ---------------- LAYOUTS ---------------- */
+.layout-1,
+.layout-2,
+.layout-3 {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.layout-1 {
+    text-align: center;
+}
+
+.layout-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.layout-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+/* ---------------- COLUMN CONTENT ---------------- */
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.column img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* ---------------- TEXT ---------------- */
+p {
+    font-size: 1.6em;
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+ul {
+    list-style: none;
+    font-size: 1.6em;
+    color: #2d3748;
+}
+
+li {
+    padding-left: 28px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #4c51bf;
+}
+
+/* ---------------- NAV ---------------- */
+.navigation {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+button {
+    background: #4c51bf;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background: #a0aec0;
+}
+
+.slide-number {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: #ffffff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 1.1em;
+}
+</style>
+</head>
+
+<body>
+
+<div class="slide-container">
+
+<!-- SLIDE 1: ONE COLUMN -->
+<div class="slide active">
+    <div class="slide-header">
+        <h1>Maps & Programming</h1>
+        <h2>Step-by-step instructions: you can succeed, but you’re blind.</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+        <div class="column">
+            <p>Imagine being handed a piece of paper with directions.</p>
+            <p>Miss one step and you’re lost.</p>
+            <p>No context. No recovery.</p>
+        </div>
+        <div class="column">
+            <img src="hand_written.jpg" width = 600 alt="Hand drawn">
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h1>Instructions vs Maps</h1>
+        <h2>Interactive map: you see the system, and the landmarks make sense.</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <p>You can see every street, every landmark, every connection</p>
+                <p>You gain context: you see why shortcuts exist, why bridges are built here, and where traffic bottlenecks are.</p>
+                <p>Make a wrong turn? The system reroutes you and shows whys</p>
+                <p>You understand not just how to get there—but why the path works this way</p>
+            </div>
+
+            <div class="column">
+                <img src="google_map.jpg" width = 600 alt="maps">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: THREE COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>What This Talk Will Give You</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-3">
+            <!-- Left column: What the talk is about -->
+            <div class="column">
+                <p><strong>What We’ll Explore</strong></p>
+                <ul>
+                    <li>How a simple server works under the hood</li>
+                    <li>Why frameworks like Flask/FastAPI use decorators</li>
+                    <li>What asyncio is really doing for concurrency</li>
+                    <li>How abstractions solve problems step by step</li>
+                    <li>Landmarks to navigate future frameworks with insight</li>
+                </ul>
+            </div>
+
+            <!-- Center column: Visual candy -->
+            <div class="column" style="text-align:center;">
+                <img src="artistic_diagram.png" width="500" alt="Network complexity visualization">
+            </div>
+
+            <!-- Right column: What the talk is NOT about -->
+            <div class="column">
+                <p><strong>What We Won’t Cover</strong></p>
+                <ul>
+                    <li>Complete, production-ready FastAPI apps</li>
+                    <li>Deep frontend HTML/CSS or JavaScript</li>
+                    <li>Advanced database optimization</li>
+                    <li>All edge cases or exhaustive error handling</li>
+                    <li>Turning you into a framework developer in one hour</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 4: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>A Modern Web Stack is Big</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <div class="column">
+                <p>- You need 8-10 different pieces minimum</p>
+                <p>- Load balancing, reverse proxies, ASGI servers, databases, caching, message queues</p>
+                <p>- SSL certificates, security headers, rate limiting, monitoring</p>
+                <p>- This can take weeks to set up properly</p>
+            </div>
+            <div class="column">
+                <img src="modern_stack.png" width=450>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>The Absurd Extreme: A Minimal Web Server</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: talking points -->
+            <div class="column">
+                <ul>
+                    <li>Here's the opposite extreme – the world's simplest web server</li>
+                    <li>Just 4 lines of Bash using netcat to listen on a port</li>
+                    <li>No matter what you request – /, /about, /api/users – you get the same response</li>
+                    <li>No file serving, no routing, no frameworks, no magic</li>
+                    <li>But it WORKS! You could even point a domain at it and serve a page</li>
+                </ul>
+            </div>
+
+            <!-- Right column: code block -->
+            <div class="column">
+                <pre><code class="language-bash">
+#!/bin/bash
+while true; do
+  echo "HTTP/1.1 200 OK
+
+<h1>Hello World</h1>" | nc -l 8080
+done
+</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SLIDE 6: TWO COLUMNS -->
+<div class="slide">
+    <div class="slide-header">
+        <h2>From the Absurd to Reality: Python Sockets</h2>
+    </div>
+
+    <div class="slide-body">
+        <div class="layout-2">
+            <!-- Left column: intro text -->
+            <div class="column">
+                <p>On the last slide, we saw the world’s simplest web server: one Bash script, one static response. Fun, but not real-world.</p>
+                <p>Now, we’ll start building a server the Python way, from the bottom up:</p>
+                <ul>
+                    <li>Set up a socket to listen for connections</li>
+                    <li>Accept a client connection and send raw data</li>
+                    <li>No frameworks yet—just the raw mechanics of networking</li>
+                    <li>We’ll gradually layer features until it becomes a modern, async web server</li>
+                </ul>
+                <p>Let’s jump into VS Code and see this in action, step by step.</p>
+            </div>
+
+            <!-- Right column: code block -->
+            <div class="column">
+                <pre><code class="language-python">import socket
+
+def main() -> None:
+    server_socket: socket.socket = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_STREAM,
+    )
+    server_socket.bind(("127.0.0.1", 8002))
+    server_socket.listen(1)
+
+    print("Listening on http://127.0.0.1:8002")
+
+    client_socket, addr = server_socket.accept()
+    print(f"Connection from {addr}")
+
+    # Send raw bytes — not valid HTTP
+    client_socket.sendall(b"Hello from a socket!")
+    client_socket.close()
+    server_socket.close()
+
+
+if __name__ == "__main__":
+    main()
+</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Slide 6 -->
+    <div class="slide">
+        <h2>What this talk is</h2>
+        <p>This is not a complete Google Earth view of web servers.</p>
+        <p>But it is an attempt to give you a better map.</p>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide">
+        <p>A map where you can see:</p>
+        <ul>
+            <li>Where you are</li>
+            <li>What’s doing the hard work for you</li>
+            <li>What roads exist that you might explore later</li>
+        </ul>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide">
+        <h2>So let’s start very small</h2>
+        <p>Before HTTP. Before frameworks.</p>
+        <p>Just a server, a socket, and a browser.</p>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide">
+        <h2>TCP is doing a lot for us</h2>
+        <p>When we open a socket, we’re not starting from nothing.</p>
+        <p>TCP already guarantees ordering, delivery, retries, and flow control.</p>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide">
+        <p>TCP makes sure:</p>
+        <ul>
+            <li>Packets arrive in order</li>
+            <li>Lost packets are resent</li>
+            <li>Both sides agree the connection exists</li>
+        </ul>
+    </div>
+
+    <!-- Slide 11 -->
+    <div class="slide">
+        <p>This means our “simple” server is standing on a huge amount of machinery.</p>
+        <p>That’s not cheating. That’s the map.</p>
+    </div>
+
+    <!-- Slide 12 -->
+    <div class="slide">
+        <h2>Our first server</h2>
+        <p>At the start, our server barely speaks HTTP.</p>
+        <p>It mostly just accepts a connection and doesn’t crash.</p>
+    </div>
+
+    <!-- Slide 13 -->
+    <div class="slide">
+        <p>And that’s okay.</p>
+        <p>Because we know where we are on the map. We’re standing right on top of TCP.</p>
+    </div>
+
+    <!-- Slide 14 -->
+    <div class="slide">
+        <h2>Adding structure</h2>
+        <p>Then we start recognizing patterns.</p>
+        <p>Requests. Headers. Status lines.</p>
+    </div>
+
+    <!-- Slide 15 -->
+    <div class="slide">
+        <p>Nothing about the <em>content</em> changes.</p>
+        <p>The same HTML file. The same JavaScript. The same video.</p>
+    </div>
+
+    <!-- Slide 16 -->
+    <div class="slide">
+        <h2>Only the roads change</h2>
+        <p>What changes is how we serve it.</p>
+        <p>Blocking vs non-blocking. One client vs many.</p>
+    </div>
+
+    <!-- Slide 17 -->
+    <div class="slide">
+        <p>This is like upgrading from dirt roads to highways.</p>
+        <p>The destination stays the same.</p>
+    </div>
+
+    <!-- Slide 18 -->
+    <div class="slide">
+        <h2>Frameworks revisited</h2>
+        <p>When we return to something like FastAPI, it’s no longer magic.</p>
+    </div>
+
+    <!-- Slide 19 -->
+    <div class="slide">
+        <p>We can point to the map and say:</p>
+        <ul>
+            <li>This part replaces our socket loop</li>
+            <li>This part handles concurrency</li>
+            <li>This part speaks HTTP for us</li>
+        </ul>
+    </div>
+
+    <!-- Slide 20 -->
+    <div class="slide">
+        <h2>Ending where we started</h2>
+        <p>The goal was never to memorize directions.</p>
+        <p>The goal was to know where you are.</p>
+        <p>If you leave with anything today, I hope it’s a better internal map.</p>
+        <p>One that lets you explore without fear of getting lost.</p>
+    </div>
+</div>
+
+<div class="slide-number">
+    <span id="current-slide">1</span> / <span id="total-slides">3</span>
+</div>
+
+<div class="navigation">
+    <button onclick="changeSlide(-1)">← Previous</button>
+    <button onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+
+document.getElementById("total-slides").textContent = slides.length;
+
+function showSlide(n) {
+    slides[currentSlide].classList.remove("active");
+    currentSlide = Math.max(0, Math.min(n, slides.length - 1));
+    slides[currentSlide].classList.add("active");
+    document.getElementById("current-slide").textContent = currentSlide + 1;
+}
+
+function changeSlide(delta) {
+    showSlide(currentSlide + delta);
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === " ") changeSlide(1);
+    if (e.key === "ArrowLeft") changeSlide(-1);
+});
+</script>
+
+</body>
+</html>
